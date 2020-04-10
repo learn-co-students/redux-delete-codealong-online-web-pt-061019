@@ -4,7 +4,8 @@ import Todo from './Todo'
 
 class TodosContainer extends Component {
 
-  renderTodos = () => this.props.todos.map((todo, id) => <Todo key={id} text={todo} />)
+  // A todo has access to this.props.delete with the alias of delete. Delete could be called DESTORY or whatever
+  renderTodos = () => this.props.todos.map(todo => <Todo delete={this.props.delete} key={todo.id} todo={todo} />)
 
   render() {
     return(
@@ -21,4 +22,12 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(TodosContainer);
+// TodosContainer can now access this.props.delete(argumentToDelete)
+// This can also be passed down to an individual ToDo
+const mapDispatchToProps = dispatch => {
+  return {
+    delete: todoText => dispatch({type: 'DELETE_TODO', payload: todoText })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodosContainer);
